@@ -1,51 +1,61 @@
-Quinn Assignment: Infinite Scrollable Calendar
-This is a React application that displays an infinitely scrollable calendar with journal entries, built to be mobile-optimized and performant.
+# Quinn Assignment: Infinite Scrollable Calendar
 
-Features
-Infinite Vertical Scrolling: Seamlessly scroll through months, both into the past and future.
+A React and TypeScript application that displays a performant, infinitely scrollable calendar with a UI designed to precisely match the provided video specification.
 
-Dynamic Header: The header always displays the month and year that is most visible in the viewport.
+## Live Demo
 
-Journal Entries: Displays journal entries from a dataset on the correct dates.
+**The deployed project can be viewed here:** [https://quinn-assignment-zeeshan.netlify.app/](https://quinn-assignment-zeeshan.netlify.app/)
 
-Swipable Card UI: Clicking an entry opens a modal where you can swipe or click to navigate between adjacent entries.
+## Features
 
-Performant: Uses virtualization (IntersectionObserver) and precise scroll adjustments (flushSync) to ensure smooth, lag-free scrolling, even on mobile devices.
+- **Continuous Infinite Scrolling**: Seamlessly scroll through a single, continuous grid of days.
+- **Dynamic Header**: The header always displays the month and year that is most visible in the viewport.
+- **Journal Entries**: Displays journal entries from a dataset on the correct dates.
+- **Swipable Card UI**: Clicking an entry opens a modal where you can swipe to navigate between entries, view details, and see category tags.
+- **Performant**: Uses virtualization and precise scroll adjustments to ensure smooth, lag-free scrolling.
+- **Responsive Design**: The layout adapts from a mobile-first view to tablets and desktops.
+- **Polished UI**: Features a fixed header and weekday bar, a static footer, in-cell month labels, and a hidden scrollbar for a native-app feel.
 
-Responsive Design: The layout adapts to different screen sizes.
+## Tech Stack
 
-Tech Stack
-Framework: React with Vite
+- **Framework**: React with Vite
+- **Language**: TypeScript
+- **Date Management**: `date-fns`
+- **Styling**: Vanilla CSS
 
-Language: TypeScript
+## How to Run Locally
 
-Date Management: date-fns
+1.  **Clone the repository:**
 
-Styling: Vanilla CSS
+    ```bash
+    git clone <your-repo-url>
+    cd <repo-name>
+    ```
 
-How to Run Locally
-Clone the repository:
+2.  **Install dependencies:**
 
-git clone <your-repo-url>
-cd <repo-name>
+    ```bash
+    npm install
+    ```
 
-Install dependencies:
-This project requires date-fns.
+3.  **Start the development server:**
+    ```bash
+    npm run dev
+    ```
 
-npm install
-npm install date-fns
+The application will now be running on `http://localhost:5173` (or the next available port).
 
-Start the development server:
+## Design Choices & Architecture
 
-npm run dev
+The core challenge of this assignment is creating a smooth infinite scroll experience in a continuous grid without performance degradation. The final architecture was chosen to solve this specifically.
 
-The application will now be running on http://localhost:5173 (or the next available port).
+- **Continuous Grid Layout**: Instead of rendering separate grids for each month, the application calculates a single, flat array of all visible days. These days are then rendered into one continuous CSS grid inside the main `App` component. This approach creates the seamless "side-by-side" month flow seen in the video.
 
-Design Choices
-The core challenge of this assignment is creating a smooth infinite scroll experience without performance degradation.
+- **Virtualization**: While the grid is visually continuous, the underlying data is virtualized. Only a "window" of months (e.g., 7) is kept in the state. As the user scrolls, this window slides, and the `allDays` array is recalculated, keeping the number of DOM nodes manageable.
 
-Virtualization: Instead of rendering all months, we only keep a small "window" of 7 months in the DOM at any given time.
+- **Intersection Observer**: This API is used for two key tasks:
 
-Intersection Observer: We use the IntersectionObserver API to detect when the user scrolls near the top or bottom of the rendered list, triggering a function to load more months.
+  1.  **Infinite Scroll Trigger**: Invisible "sentinel" elements at the top and bottom of the grid trigger functions to load past or future days.
+  2.  **Header Updates**: The observer watches individual `DayCell` components to determine which month has the most visible days on screen, allowing the header to update dynamically.
 
-Precise Scroll Adjustment: To solve the common issue of "jitter" when prepending new items to a scrollable list, this project uses a combination of flushSync from react-dom and direct DOM measurements. This forces React to render the new month and allows us to calculate and apply the correct scroll offset in a single, synchronous step, making the backward scroll perfectly smooth and unnoticeable to the user.
+- **Precise Scroll Adjustment**: To solve the common issue of "jitter" when prepending new items to a scrollable list, this project uses a combination of `flushSync` from `react-dom` and direct DOM measurements. This forces React to render new days synchronously, allowing us to calculate and apply the correct scroll offset in a single step, which makes scrolling backward perfectly smooth.
