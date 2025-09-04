@@ -28,8 +28,7 @@ A React and TypeScript application that displays a performant, infinitely scroll
 1.  **Clone the repository:**
 
     ```bash
-    git clone <your-repo-url>
-    cd <repo-name>
+    git clone https://github.com/zeeshan-ahmad-khan/zeeshan-quinn-assignment.git
     ```
 
 2.  **Install dependencies:**
